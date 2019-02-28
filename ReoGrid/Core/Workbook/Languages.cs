@@ -69,7 +69,24 @@ namespace unvell.ReoGrid
 					Button_Cancel = "Отмена";
 
 					break;
-			}
+                case "zh-CN":
+                    Filter_SortAtoZ = "升序(&S)";
+                    Filter_SortZtoA = "降序(&O)";
+                    Filter_SelectAll = "全部选择";
+                    Filter_Blanks = "(空白)";
+
+                    Menu_InsertSheet = "插入(&I)";
+                    Menu_DeleteSheet = "删除(&D)";
+                    Menu_RenameSheet = "重命名(&R)...";
+                    
+                    Sheet_RenameDialog_Title = "Sheet表名修改";
+                    Sheet_RenameDialog_NameLabel = "表名: ";
+
+                    Button_OK = "确定";
+                    Button_Cancel = "取消";
+
+                    break;
+            }
 		}
 
 		#region Filter
