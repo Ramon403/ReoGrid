@@ -955,4 +955,7 @@
   <data name="SolidColor" xml:space="preserve">
     <value>纯色</value>
   </data>
+  <data name="FormatPage_AccountingFormat" xml:space="preserve">
+    <value>会计专用 (0 显示为 -)</value>
+  </data>
 </root>

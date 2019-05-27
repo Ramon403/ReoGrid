@@ -749,12 +749,17 @@ namespace unvell.ReoGrid.DataFormat
 			/// </summary>
 			public string CustomNegativePostfix { get; set; }
 
-			/// <summary>
-			/// Compare to another argument instance of NumberFormatArgs.
-			/// </summary>
-			/// <param name="obj">Another instance to be compared.</param>
-			/// <returns>true if two argument object are same.</returns>
-			public override bool Equals(object obj)
+            /// <summary>
+            /// 是否会计格式显示，如果True则会将值为0的显示成“-”
+            /// </summary>
+            public bool AccountingFormat { get; set; } = false;
+
+            /// <summary>
+            /// Compare to another argument instance of NumberFormatArgs.
+            /// </summary>
+            /// <param name="obj">Another instance to be compared.</param>
+            /// <returns>true if two argument object are same.</returns>
+            public override bool Equals(object obj)
 			{
 				if (!(obj is NumberFormatArgs)) return false;
 				NumberFormatArgs o = (NumberFormatArgs)obj;
@@ -1290,8 +1295,9 @@ namespace unvell.ReoGrid.DataFormat
 				NumberDataFormatter.NumberNegativeStyle negativeStyle = NumberDataFormatter.NumberNegativeStyle.Default;
 				string prefix = null;
 				string postfix = null;
+                bool _accountingFormat = false;
 
-				if (cell.DataFormatArgs != null && cell.DataFormatArgs is CurrencyFormatArgs)
+                if (cell.DataFormatArgs != null && cell.DataFormatArgs is CurrencyFormatArgs)
 				{
 					CurrencyFormatArgs args = (CurrencyFormatArgs)cell.DataFormatArgs;
 					prefixSymbol = args.PrefixSymbol;
@@ -1300,23 +1306,27 @@ namespace unvell.ReoGrid.DataFormat
 					negativeStyle = args.NegativeStyle;
 					prefix = args.CustomNegativePrefix;
 					postfix = args.CustomNegativePostfix;
-				}
-				//else
-				//{
-				//	var culture = Thread.CurrentThread.CurrentCulture;
+                    _accountingFormat = args.AccountingFormat;
 
-				//	switch (culture.NumberFormat.CurrencyPositivePattern)
-				//	{
-				//		case 0: prefixSymbol = culture.NumberFormat.CurrencySymbol; postfixSymbol = null; break;
-				//		case 1: prefixSymbol = null; postfixSymbol = culture.NumberFormat.CurrencySymbol; break;
-				//		case 2: prefixSymbol = " " + culture.NumberFormat.CurrencySymbol; postfixSymbol = null; break;
-				//		case 3: prefixSymbol = null; postfixSymbol = " " + culture.NumberFormat.CurrencySymbol; break;
-				//	}
+                }
+                //else
+                //{
+                //	var culture = Thread.CurrentThread.CurrentCulture;
 
-				//	cell.DataFormatArgs = new CurrencyFormatArgs { PrefixSymbol = prefixSymbol, PostfixSymbol = postfixSymbol, DecimalPlaces = decimals };
-				//}
+                //	switch (culture.NumberFormat.CurrencyPositivePattern)
+                //	{
+                //		case 0: prefixSymbol = culture.NumberFormat.CurrencySymbol; postfixSymbol = null; break;
+                //		case 1: prefixSymbol = null; postfixSymbol = culture.NumberFormat.CurrencySymbol; break;
+                //		case 2: prefixSymbol = " " + culture.NumberFormat.CurrencySymbol; postfixSymbol = null; break;
+                //		case 3: prefixSymbol = null; postfixSymbol = " " + culture.NumberFormat.CurrencySymbol; break;
+                //	}
 
-				if (currency < 0)
+                //	cell.DataFormatArgs = new CurrencyFormatArgs { PrefixSymbol = prefixSymbol, PostfixSymbol = postfixSymbol, DecimalPlaces = decimals };
+                //}
+                //如果单元格的值为0，且设定了显示会计格式，则显示 -
+                if (currency == 0 && _accountingFormat)
+                    return "-";
+                if (currency < 0)
 				{
 					if ((negativeStyle & NumberDataFormatter.NumberNegativeStyle.Red) == NumberDataFormatter.NumberNegativeStyle.Red)
 						cell.RenderColor = SolidColor.Red;
@@ -1347,8 +1357,7 @@ namespace unvell.ReoGrid.DataFormat
 				if ((negativeStyle & NumberDataFormatter.NumberNegativeStyle.Minus) == 0)
 				{
 					currency = Math.Abs(currency);
-				}
-
+				} 
 				return currency.ToString(numberPartFormat);
 			}
 			else
@@ -1375,13 +1384,17 @@ namespace unvell.ReoGrid.DataFormat
 			/// Culture name in English. (e.g. en-US)
 			/// </summary>
 			public string CultureEnglishName { get; set; }
+            /// <summary>
+            /// 是否会计格式显示，如果True则会将值为0的显示成“-”
+            /// </summary>
+            public bool AccountingFormat { get; set; } = false;
 
-			/// <summary>
-			/// Check whether or not two objects are same.
-			/// </summary>
-			/// <param name="obj">Another object to be compared.</param>
-			/// <returns>True if two objects are same; Otherwise return false.</returns>
-			public override bool Equals(object obj)
+            /// <summary>
+            /// Check whether or not two objects are same.
+            /// </summary>
+            /// <param name="obj">Another object to be compared.</param>
+            /// <returns>True if two objects are same; Otherwise return false.</returns>
+            public override bool Equals(object obj)
 			{
 				if (!(obj is CurrencyFormatArgs)) return false;
 

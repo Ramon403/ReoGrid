@@ -29,7 +29,7 @@ using System.Text;
 using unvell.Common;
 using unvell.ReoGrid.Graphics;
 
-#if DEBUG
+
 namespace unvell.ReoGrid
 {
 	partial class Worksheet
@@ -435,6 +435,5 @@ namespace unvell.ReoGrid.Tests
 		}
 	}
 }
-#endif // DEBUG
 
 #endif // WINFORM

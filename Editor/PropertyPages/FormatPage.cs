@@ -49,7 +49,7 @@ namespace unvell.ReoGrid.PropertyPages
 			labDecimalPlacesNum.Text = LangResource.FormatPage_Decimal_Places;
 			labDecimalPlacesCurrency.Text = LangResource.FormatPage_Decimal_Places;
 			labDecimalPlacesPercent.Text = LangResource.FormatPage_Decimal_Places;
-
+            chkAccountingFormat.Text = LangResource.FormatPage_AccountingFormat;
 			labNegativeNumbersNum.Text = LangResource.FormatPage_Negative_Numbers;
 			labNegativeNumberCurrency.Text = LangResource.FormatPage_Negative_Numbers;
 
@@ -179,7 +179,7 @@ namespace unvell.ReoGrid.PropertyPages
 
 			var cultures = CultureInfo.GetCultures(CultureTypes.InstalledWin32Cultures).OrderBy(c => c.EnglishName);
 			foreach (CultureInfo info in cultures)
-			{
+			{ 
 				datetimeLocationList.Items.Add(info);
 				if (info.Equals(currentCulture))
 				{
@@ -279,7 +279,8 @@ namespace unvell.ReoGrid.PropertyPages
 
 			numberDecimalPlaces.ValueChanged += (s, e) => UpdateSample();
 			chkNumberUseSeparator.CheckedChanged += (s, e) => UpdateSample();
-			numberNegativeStyleList.SelectedIndexChanged += (s, e) => UpdateSample();
+            chkAccountingFormat.CheckedChanged += (s, e) => UpdateSample();
+            numberNegativeStyleList.SelectedIndexChanged += (s, e) => UpdateSample();
 			currencyDecimalPlaces.ValueChanged += (s, e) => UpdateSample();
 			currencyNegativeStyleList.SelectedIndexChanged += (s, e) => UpdateSample();
 			percentDecimalPlaces.ValueChanged += (s, e) => UpdateSample();
@@ -339,7 +340,8 @@ namespace unvell.ReoGrid.PropertyPages
 
 						currencyFormatArgs.NegativeStyle = ((NegativeStyleListItem)currencyNegativeStyleList.SelectedItem).NegativeStyle;
 						currencyFormatArgs.DecimalPlaces = (short)currencyDecimalPlaces.Value;
-						currentFormatArgs = currencyFormatArgs;
+                        currencyFormatArgs.AccountingFormat = chkAccountingFormat.Checked;
+                        currentFormatArgs = currencyFormatArgs;
 					}
 					break;
 
@@ -521,7 +523,7 @@ namespace unvell.ReoGrid.PropertyPages
 				// some cultures doesn't have currency symbol
 				try
 				{
-					return string.Format("{0} ({1})", this.Culture.EnglishName, this.Culture.NumberFormat.CurrencySymbol);
+					return string.Format("{0} ({1})", this.Culture.DisplayName, this.Culture.NumberFormat.CurrencySymbol);
 				}
 				catch
 				{

@@ -955,4 +955,7 @@
   <data name="SolidColor" xml:space="preserve">
     <value>Solid</value>
   </data>
+  <data name="FormatPage_AccountingFormat" xml:space="preserve">
+    <value>&amp;Accounting Format</value>
+  </data>
 </root>

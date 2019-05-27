@@ -1458,38 +1458,42 @@ namespace unvell.ReoGrid.Utility
 
 			var targetType = typeof(T);
 
-			if (data is string)
-			{
-				if (targetType == typeof(string))
-				{
-					value = (T)data;
-					return true;
-				}
+            if (data is string)
+            {
+                if (targetType == typeof(string))
+                {
+                    value = (T)data;
+                    return true;
+                }
 
-				double tmpVal;
-				if (!double.TryParse((string)data, out tmpVal))
-				{
-					value = default(T);
-					return false;
-				}
-				data = tmpVal;
-			}
-			else if (data is StringBuilder)
-			{
-				if (targetType == typeof(StringBuilder))
-				{
-					value = (T)data;
-					return true;
-				}
+                double tmpVal;
+                if (!double.TryParse((string)data, out tmpVal))
+                {
+                    value = default(T);
+                    return false;
+                }
+                data = tmpVal;
+            }
+            else if (data is StringBuilder)
+            {
+                if (targetType == typeof(StringBuilder))
+                {
+                    value = (T)data;
+                    return true;
+                }
 
-				double tmpVal;
-				if (!double.TryParse(((StringBuilder)data).ToString(), out tmpVal))
-				{
-					value = default(T);
-					return false;
-				}
-				data = tmpVal;
-			}
+                double tmpVal;
+                if (!double.TryParse(((StringBuilder)data).ToString(), out tmpVal))
+                {
+                    value = default(T);
+                    return false;
+                }
+                data = tmpVal;
+            }
+            else if (data is unvell.ReoGrid.Drawing.RichText rtxt)
+            {
+                data = rtxt.ToPlainText();
+            }
 
 			// require string, but data is not in string, return false
 			if (targetType != typeof(string) && (data is string || data is StringBuilder))
@@ -1503,8 +1507,14 @@ namespace unvell.ReoGrid.Utility
 				{
 					data = (int)(char)data;
 				}
-			}
-
+			} 
+            if (data is double)
+            {
+                if (double.IsNaN((double)data) || double.IsInfinity((double)data))
+                {
+                    data = 0;
+                }
+            }
 			value = (T)Convert.ChangeType(data, typeof(T));
 			return true;
 		}
