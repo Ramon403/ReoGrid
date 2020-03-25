@@ -96,7 +96,7 @@ namespace unvell.ReoGrid.DataFormat
 				NumberDataFormatter.NumberNegativeStyle negativeStyle = NumberDataFormatter.NumberNegativeStyle.Default;
 				string prefix = null;
 				string postfix = null;
-
+				bool accountZero = false;
 				if (cell.DataFormatArgs != null && cell.DataFormatArgs is CurrencyFormatArgs)
 				{
 					CurrencyFormatArgs args = (CurrencyFormatArgs)cell.DataFormatArgs;
@@ -106,6 +106,7 @@ namespace unvell.ReoGrid.DataFormat
 					negativeStyle = args.NegativeStyle;
 					prefix = args.CustomNegativePrefix;
 					postfix = args.CustomNegativePostfix;
+					accountZero = args.AccountingFormat;
 				}
 				//else
 				//{
@@ -121,7 +122,10 @@ namespace unvell.ReoGrid.DataFormat
 
 				//	cell.DataFormatArgs = new CurrencyFormatArgs { PrefixSymbol = prefixSymbol, PostfixSymbol = postfixSymbol, DecimalPlaces = decimals };
 				//}
-
+				if (currency == 0 && accountZero)
+				{
+					return "-";
+				}
 				if (currency < 0)
 				{
 					if ((negativeStyle & NumberDataFormatter.NumberNegativeStyle.Red) == NumberDataFormatter.NumberNegativeStyle.Red)
@@ -181,6 +185,10 @@ namespace unvell.ReoGrid.DataFormat
 			/// Culture name in English. (e.g. en-US)
 			/// </summary>
 			public string CultureEnglishName { get; set; }
+			/// <summary>
+			/// finance '0' to display '-'
+			/// </summary>
+			public bool AccountingFormat { get; set; }
 
 			/// <summary>
 			/// Check whether or not two objects are same.
