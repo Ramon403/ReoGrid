@@ -490,6 +490,7 @@ namespace unvell.ReoGrid.Editor
 
 					hpf.HeaderText = sampleHeader.Text;
 					hpf.HeaderTextColor = sampleHeader.TextColor ?? Color.Empty;
+					hpf.DefaultCellBody = sampleHeader.DefaultCellBody;
 					hpf.RowHeaderWidth = sheet.RowHeaderWidth;
 					hpf.AutoFitToCell = sampleHeader.IsAutoHeight;
 
@@ -507,6 +508,7 @@ namespace unvell.ReoGrid.Editor
 							}
 
 							header.TextColor = hpf.HeaderTextColor;
+							header.DefaultCellBody = hpf.DefaultCellBody;
 							header.IsAutoHeight = hpf.AutoFitToCell;
 						}
 
@@ -2941,59 +2943,13 @@ namespace unvell.ReoGrid.Editor
 		}
 		#endregion // Filter
 
-#if DEBUG
+		#if DEBUG
 		private void ForTest()
 		{
 			var sheet = this.grid.CurrentWorksheet;
-		}
 
-		private void TestRTFUnderline(Worksheet sheet)
-		{
-			RichText rt = new RichText();
-			rt.Span("Hello group 日本語_ テスト", fontStyles: FontStyles.Underline);
-
-			sheet["A1"] = rt;
-		}
-
-		private void TestIssue_7(Worksheet sheet)
-		{
-			var range = sheet.Ranges["B2:D5"];
-
-			// test code
-			sheet.SetRangeStyles(range, new WorksheetRangeStyle
-			{
-				Flag = PlainStyleFlag.All,
-				FontName = "Arial",
-				Italic = false,
-				Bold = true,
-				Underline = false,
-				FontSize = 30,
-				TextWrapMode = TextWrapMode.NoWrap,
-				HAlign = ReoGridHorAlign.Left,
-				VAlign = ReoGridVerAlign.Middle,
-				TextColor = SolidColor.Black,
-				BackColor = SolidColor.Transparent
-			});
-
-			this.grid.Save("test.xlsx");
-		}
-
-		private void TestAddRectangle(Worksheet sheet)
-		{
-			var rectObj = new Drawing.Shapes.RectangleShape()
-			{
-				// set the location of rectangle
-				Location = new Graphics.Point(50, 50),
-
-				// set the size of rectangle
-				Size = new Graphics.Size(200, 100),
-			};
-
-			// adding rectangle on worksheet
-			sheet.FloatingObjects.Add(rectObj);
 		}
 
 #endif // DEBUG
-
 	}
 }

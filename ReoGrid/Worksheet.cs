@@ -410,24 +410,10 @@ namespace unvell.ReoGrid
 			if (row < 0 || col < 0 || row >= this.rows.Count || col >= this.cols.Count) return;
 
 			this.FreezeToCell(row, col, FreezeArea.LeftTop);
-			//this.FreezePos = new CellPosition(row, col);
-
-			//if (viewportController is IFreezableViewportController)
-			//{
-			//	var lastFreezePos = ((IFreezableViewportController)viewportController).FreezePosition;
-
-			//	if (lastFreezePos == FreezeArea.None)
-			//	{
-			//		lastFreezePos = FreezeArea.LeftTop;
-			//	}
-
-			//	FreezeToCell(row, col, lastFreezePos);
-			//}
-			////else
-			////{
-			////	throw new FreezeUnsupportedException();
-			////}
 		}
+
+		private CellPosition lastFrozenPosition;
+		private FreezeArea lastFrozenArea = FreezeArea.None;
 
 		/// <summary>
 		/// Freezes worksheet at specified cell position and specifies the freeze areas.
@@ -437,6 +423,18 @@ namespace unvell.ReoGrid
 		/// <param name="area">Specifies the frozen panes.</param>
 		public void FreezeToCell(int row, int col, FreezeArea area)
 		{
+			/////////////////////////////////////////////////////////////////
+			// fix issue #151, #172, #313
+			if (lastFrozenPosition == new CellPosition(row, col) && lastFrozenArea == area)
+			{
+				// skip to perform freeze if forzen position and area are not changed
+				return;
+			}
+
+			lastFrozenPosition = new CellPosition(row, col);
+			lastFrozenArea = area;
+			/////////////////////////////////////////////////////////////////
+
 			if (this.viewportController != null)
 			{
 				// update viewport bounds - sometimes the viewport may cannot get the correct size for freezing,
@@ -897,8 +895,9 @@ namespace unvell.ReoGrid
 			cells[row, col] = cell;
 
 			var colHeader = this.cols[col];
+			var rowHeader = this.rows[row];
 
-			// create cell body if the column header has a default body type specified
+			// create cell body if the either column or row header has a default body type specified
 			if (colHeader.DefaultCellBody != null)
 			{
 				try
@@ -910,11 +909,23 @@ namespace unvell.ReoGrid
 					throw new CannotCreateCellBodyException(
 						"Cannot create instance of default cell body specified in column header.", ex);
 				}
-
-				if (cell.body != null)
+			}
+			else if (rowHeader.DefaultCellBody != null)
+			{
+				try
 				{
-					cell.body.OnSetup(cell);
+					cell.Body = System.Activator.CreateInstance(rowHeader.DefaultCellBody) as ICellBody;
 				}
+				catch (Exception ex)
+				{
+					throw new CannotCreateCellBodyException(
+						"Cannot create instance of default cell body specified in row header.", ex);
+				}
+			}
+
+			if (cell.body != null)
+			{
+				cell.body.OnSetup(cell);
 			}
 
 			if (updateStyle)
@@ -1017,7 +1028,7 @@ namespace unvell.ReoGrid
 		{
 			if (cell == null) return null;
 
-			if (cell.IsMergedCell)
+			if (cell.InsideMergedRange)
 			{
 				if (cell.IsStartMergedCell)
 					return cell;

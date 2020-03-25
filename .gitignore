@@ -254,4 +254,12 @@ paket-files/
 /NuGet/NuGet.exe
 /NuGet/packages*/*
 /_Output
+
+# Test output files
 /TestCase/xlsx/OUT*.xlsx
+TestCase/rgf/4FactorsGrid_Output.rgf
+TestCase/rgf/FrozenCellsInputOutput.rgf
+TestCase/rgf/LastColumnHBorderTest_Output.rgf
+TestCase/rgf/LastRowVBorderTest_Output.rgf
+TestCase/xlsx/BorderStyleReadBack.xlsx
+TestCase/xlsx/LastRowAndColumnError.xlsx
