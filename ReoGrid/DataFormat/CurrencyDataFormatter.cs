@@ -97,6 +97,7 @@ namespace unvell.ReoGrid.DataFormat
 				string prefix = null;
 				string postfix = null;
 				bool accountZero = false;
+
 				if (cell.DataFormatArgs != null && cell.DataFormatArgs is CurrencyFormatArgs)
 				{
 					CurrencyFormatArgs args = (CurrencyFormatArgs)cell.DataFormatArgs;
@@ -126,6 +127,7 @@ namespace unvell.ReoGrid.DataFormat
 				{
 					return "-";
 				}
+
 				if (currency < 0)
 				{
 					if ((negativeStyle & NumberDataFormatter.NumberNegativeStyle.Red) == NumberDataFormatter.NumberNegativeStyle.Red)
