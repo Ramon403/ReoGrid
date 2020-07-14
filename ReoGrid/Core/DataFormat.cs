@@ -228,4 +228,4 @@ namespace unvell.ReoGrid
 		}
 		#endregion // Delete
 	}
-}
+} 
